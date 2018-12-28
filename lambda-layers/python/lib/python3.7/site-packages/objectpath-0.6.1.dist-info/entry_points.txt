@@ -1,0 +1,3 @@
+[console_scripts]
+objectpath = objectpath.shell:main
+

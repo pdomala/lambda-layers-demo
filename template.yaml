@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SAM Template for Layers-Demo Application
+Globals:
+    Function:
+        Timeout: 60
+
+Resources:
+
+    DeserializeDemoFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: LayersApp-DeserializeDemo
+            Description: Layers App Deserialize Demo Function
+            Role: arn:aws:iam::093833860903:role/MyLambdaRole
+            CodeUri: deserialize-demo/
+            Handler: main.lambda_handler
+            Runtime: python3.7
+            Layers: 
+                - !Ref MyLambdaLayer
+
+    ObjectPathDataDemoFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+            FunctionName: LayersApp-ObjectPathDataDemo
+            Description: Layers App Deserialize Demo Function
+            Role: arn:aws:iam::093833860903:role/MyLambdaRole
+            CodeUri: objectpath-data-demo/
+            Handler: main.lambda_handler
+            Runtime: python3.7
+            Layers: 
+                - !Ref MyLambdaLayer
+
+    MyLambdaLayer:
+        Type: AWS::Serverless::LayerVersion
+        Properties:
+            LayerName: MyLambdaLayer
+            Description: My Lambda Layer with Deserialize Function, Objectpath Module & AWS Regions JSON
+            ContentUri: lambda-layers/my-lambda-layer.zip
+            CompatibleRuntimes:
+                - python3.6
+                - python3.7
+            LicenseInfo: MIT
+            RetentionPolicy: Retain
+
+Outputs:
+    MyLambdaLayerARN:
+        Value: !Ref MyLambdaLayer
+        Description: MyLambdaLayer ARN
+        Export:
+            Name: my-lambda-layer-arn

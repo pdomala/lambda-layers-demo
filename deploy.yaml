@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: SAM Template for Layers-Demo Application
+Globals:
+  Function:
+    Timeout: 60
+Outputs:
+  MyLambdaLayerARN:
+    Description: MyLambdaLayer ARN
+    Export:
+      Name: my-lambda-layer-arn
+    Value:
+      Ref: MyLambdaLayer
+Resources:
+  DeserializeDemoFunction:
+    Properties:
+      CodeUri: s3://pdomala-sam/bb7306bf41c96eadc8a072caaa30eb3a
+      Description: Layers App Deserialize Demo Function
+      FunctionName: LayersApp-DeserializeDemo
+      Handler: main.lambda_handler
+      Layers:
+      - Ref: MyLambdaLayer
+      Role: arn:aws:iam::093833860903:role/MyLambdaRole
+      Runtime: python3.7
+    Type: AWS::Serverless::Function
+  MyLambdaLayer:
+    Properties:
+      CompatibleRuntimes:
+      - python3.6
+      - python3.7
+      ContentUri: s3://pdomala-sam/caf2e394904719f7e6486077a7072997
+      Description: My Lambda Layer with Deserialize Function, Objectpath Module &
+        AWS Regions JSON
+      LayerName: MyLambdaLayer
+      LicenseInfo: MIT
+      RetentionPolicy: Retain
+    Type: AWS::Serverless::LayerVersion
+  ObjectPathDataDemoFunction:
+    Properties:
+      CodeUri: s3://pdomala-sam/c603c64efc2fd2ce2ec2dff765b9fd6c
+      Description: Layers App Deserialize Demo Function
+      FunctionName: LayersApp-ObjectPathDataDemo
+      Handler: main.lambda_handler
+      Layers:
+      - Ref: MyLambdaLayer
+      Role: arn:aws:iam::093833860903:role/MyLambdaRole
+      Runtime: python3.7
+    Type: AWS::Serverless::Function
+Transform: AWS::Serverless-2016-10-31
